@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\Basic.shader" />
+    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\IndexBuffer.h">
@@ -70,12 +71,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="F:\02 gitcode\ChernoOpenGL\OpenGL\res\textures\ChernoLogo.png">
-      <Filter>资源文件</Filter>
-    </Image>
-    <Image Include="F:\02 gitcode\ChernoOpenGL\OpenGL\res\textures\HazelLogo.png">
-      <Filter>资源文件</Filter>
-    </Image>
     <Image Include="res\textures\ChernoLogo.png">
       <Filter>资源文件</Filter>
     </Image>

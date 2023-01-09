@@ -75,6 +75,11 @@ int main()
       -0.5f,  0.5f, 0.0f,1.0f,
   };
   unsigned int indeices[] = { 0,1,2,2,3,0 };
+
+  //开启混合模式
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
   VertexArray va;
   VertexBuffer vb(vertices, 4 * 4 * sizeof(float));
 

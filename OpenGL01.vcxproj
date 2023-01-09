@@ -153,6 +153,7 @@
     <ClCompile Include="src\Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="README.md" />
     <None Include="res\shaders\Basic.shader" />
   </ItemGroup>
   <ItemGroup>
@@ -166,8 +167,6 @@
     <ClInclude Include="src\Texture.h" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="F:\02 gitcode\ChernoOpenGL\OpenGL\res\textures\ChernoLogo.png" />
-    <Image Include="F:\02 gitcode\ChernoOpenGL\OpenGL\res\textures\HazelLogo.png" />
     <Image Include="res\textures\ChernoLogo.png" />
     <Image Include="res\textures\HazelLogo.png" />
   </ItemGroup>
