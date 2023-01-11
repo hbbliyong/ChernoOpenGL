@@ -1,13 +1,14 @@
 #shader vertex
 
 #version 330 core
-layout (location = 0) in vec3 aPos;
+layout (location = 0) in vec4 aPos;
 layout(location = 1)  in vec2 textCoord;
 
 out vec2 v_TextCoord;
+uniform mat4 u_MVP;
 void main()
 {
-   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
+   gl_Position = u_MVP*aPos;
    v_TextCoord = textCoord;
 }
 

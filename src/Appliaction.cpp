@@ -10,8 +10,12 @@
 #include "Shader.h"
 #include "Renderer.h"
 #include "Texture.h"
+#include "vendor/glm/glm.hpp"
+#include "vendor/glm/matrix.hpp"
+#include "Vendor/glm/ext/matrix_clip_space.hpp"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+int main();
 void processInput(GLFWwindow* window);
 
 
@@ -76,9 +80,23 @@ int main()
   };
   unsigned int indeices[] = { 0,1,2,2,3,0 };
 
-  //开启混合模式
-  glEnable(GL_BLEND);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  /**
+    * 混合:
+    * 将输出颜色(判断着色器输出的颜色)和目标缓冲区已有的颜色结合
+    * glEnable/glDisable(启用&关闭) => glBlendFunc(指定颜色因子) => glBlendEquation(指定混合模式)
+    * glBlendEquation(mode) mode: src和dest的混合方式(默认GL_FUNC_ADD, 叠加)
+    *
+    **/
+    /* 启用混合(默认不会启用) */
+  GLCall(glEnable(GL_BLEND));
+  /**
+   * glBlendFunc(src, dest) 指定颜色因子
+   * src 指定输出颜色(RGBA)因子的计算方式, 默认为GL_ONE
+   * dest 指定目标颜色因子的计算方式, 默认为GL_ZERO
+   * GL_SRC_ALPHA 因为src的alpha为0, GL_ONE_MINUS_SRC_ALPHA 1-src.alpha
+   * RGBA = Srgba * GL_SRC_ALPHA + Drgba * GL_ONE_MINUS_SRC_ALPHA
+   **/
+  GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 
   VertexArray va;
   VertexBuffer vb(vertices, 4 * 4 * sizeof(float));
@@ -89,9 +107,11 @@ int main()
   va.AddBuffer(vb, layout);
 
   IndexBuffer ib(indeices,6);
+  glm::mat4 proj = glm::ortho(-2.0f, 2.0f, -1.5f, 1.5f, -1.0f, 1.0f);
   Shader shader ("res/shaders/Basic.shader");
   shader.Bind();
   shader.SetUniform4f("u_Color", .8f, .3f, .8f, 1.0f);
+  shader.SetUniformMat4f("u_MVP", proj);
   Texture texture("res/textures/ChernoLogo.png");
   texture.Bind();
   shader.SetUniform1i("u_Texture", 0);
