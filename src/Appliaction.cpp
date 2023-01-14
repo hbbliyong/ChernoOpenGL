@@ -13,6 +13,7 @@
 #include "vendor/glm/glm.hpp"
 #include "vendor/glm/matrix.hpp"
 #include "Vendor/glm/ext/matrix_clip_space.hpp"
+#include <glm/ext/matrix_transform.hpp>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 int main();
@@ -102,16 +103,18 @@ int main()
   VertexBuffer vb(vertices, 4 * 4 * sizeof(float));
 
   VertexBufferLayout layout;
- layout.Push<float>(2);
- layout.Push<float>(2);
+  layout.Push<float>(2);
+  layout.Push<float>(2);
   va.AddBuffer(vb, layout);
 
-  IndexBuffer ib(indeices,6);
+  IndexBuffer ib(indeices, 6);
   glm::mat4 proj = glm::ortho(-2.0f, 2.0f, -1.5f, 1.5f, -1.0f, 1.0f);
-  Shader shader ("res/shaders/Basic.shader");
+  glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.5, 0, 0));
+  glm::mat4 result = view * proj;
+  Shader shader("res/shaders/Basic.shader");
   shader.Bind();
   shader.SetUniform4f("u_Color", .8f, .3f, .8f, 1.0f);
-  shader.SetUniformMat4f("u_MVP", proj);
+  shader.SetUniformMat4f("u_MVP", result);
   Texture texture("res/textures/ChernoLogo.png");
   texture.Bind();
   shader.SetUniform1i("u_Texture", 0);
@@ -126,7 +129,7 @@ int main()
   shader.UnBind();
 
   Renderer renderer;
- 
+
   // uncomment this call to draw in wireframe polygons.
   //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   float r = 0;
@@ -147,7 +150,14 @@ int main()
     // draw our first triangle
     shader.Bind();
     shader.SetUniform4f("u_Color", r, .3f, .8f, 1.0f);
+    view = glm::translate(glm::mat4(1.0f), glm::vec3(0.25, 0, 0));
+    result = view * proj;
+    shader.SetUniformMat4f("u_MVP", result);
+    renderer.Draw(va, ib, shader);
 
+    view = glm::translate(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 0));
+    result = view * proj;
+    shader.SetUniformMat4f("u_MVP", result);
     renderer.Draw(va, ib, shader);
     if (r > 1.0f)
       increment = -0.05f;
