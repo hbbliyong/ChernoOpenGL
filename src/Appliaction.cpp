@@ -1,4 +1,4 @@
-#include "glad.c"
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #include <iostream>
@@ -14,6 +14,8 @@
 #include "vendor/glm/matrix.hpp"
 #include "Vendor/glm/ext/matrix_clip_space.hpp"
 #include <glm/ext/matrix_transform.hpp>
+#include <imgui/imgui_impl_opengl3.h>
+#include <imgui/imgui_impl_glfw.h>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 int main();
@@ -99,6 +101,13 @@ int main()
    **/
   GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 
+  ImGui::CreateContext();
+  ImGui_ImplGlfw_InitForOpenGL(window, true);
+  ImGui::StyleColorsDark();
+
+  const char* glsl_version = "#version 330";
+  ImGui_ImplOpenGL3_Init(glsl_version);
+
   VertexArray va;
   VertexBuffer vb(vertices, 4 * 4 * sizeof(float));
 
@@ -129,7 +138,7 @@ int main()
   shader.UnBind();
 
   Renderer renderer;
-
+  
   // uncomment this call to draw in wireframe polygons.
   //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   float r = 0;
@@ -145,12 +154,21 @@ int main()
     // render
     // ------
     renderer.Clear();
+
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+    ImGui::Begin("Test");
+    ImGui::Text("Hello, world %d", 123);
+    float f = 0.25;
+    ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
+    ImGui::End();
     va.Bind();
     ib.Bind();
     // draw our first triangle
     shader.Bind();
     shader.SetUniform4f("u_Color", r, .3f, .8f, 1.0f);
-    view = glm::translate(glm::mat4(1.0f), glm::vec3(0.25, 0, 0));
+    view = glm::translate(glm::mat4(1.0f), glm::vec3(f, 0, 0));
     result = view * proj;
     shader.SetUniformMat4f("u_MVP", result);
     renderer.Draw(va, ib, shader);
@@ -165,6 +183,9 @@ int main()
       increment = 0.05f;
     r += increment;
 
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
     // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
     // -------------------------------------------------------------------------------
     glfwSwapBuffers(window);
@@ -173,6 +194,12 @@ int main()
 
   // glfw: terminate, clearing all previously allocated GLFW resources.
   // ------------------------------------------------------------------
+  // Cleanup
+  ImGui_ImplOpenGL3_Shutdown();
+  ImGui_ImplGlfw_Shutdown();
+  ImGui::DestroyContext();
+
+  glfwDestroyWindow(window);
   glfwTerminate();
   return 0;
 }
