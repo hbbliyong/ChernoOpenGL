@@ -18,6 +18,7 @@
 #include <imgui/imgui_impl_glfw.h>
 #include "tests/Texture2D.h"
 #include "tests/TestClearColor.h"
+#include "tests/TestBatchRender.h"
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 int main();
 void processInput(GLFWwindow* window);
@@ -106,6 +107,7 @@ int main()
 
   testMenu->RegisterTest<test::TestClearColor>("Clear Color");
   testMenu->RegisterTest<test::Texture2D>("Texture 2D");
+  testMenu->RegisterTest<test::TestBatchRender>("BatchRender");
 
   {
   //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
